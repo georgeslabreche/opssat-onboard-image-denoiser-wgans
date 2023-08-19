@@ -11,18 +11,16 @@ import shutil
 import cv2
 import os
 import argparse
-from progressbar import ProgressBar
 from skimage.util import random_noise
 import wget
 import tarfile
+from tqdm import tqdm
 
 
 def make_dir(dir):
     if not os.path.exists(dir):
         os.makedirs(dir, 0o755)
 
-
-bar = ProgressBar()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''\
@@ -96,7 +94,7 @@ if __name__ == '__main__':
 
         dir_list = [i.split('/')[-1] for i in target_file]
         # resize image and add noise
-        for i in bar(range(len(dir_list))):
+        for i in tqdm(range(len(dir_list))):
             img = cv2.imread(os.path.join(target_path, dir_list[i]))
             x, y = img.shape[0:2]
             if not all([x == args.size, y == args.size]):
@@ -119,7 +117,7 @@ if __name__ == '__main__':
         parser.print_help()
         exit()
 
-    for i in bar(range(len(dir_list))):
+    for i in tqdm(range(len(dir_list))):
         img = cv2.imread(os.path.join(origin_dir, dir_list[i]))
         x, y = img.shape[0:2]
         if args.resize:
