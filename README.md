@@ -1,178 +1,83 @@
-# Image Denoise using Wasserstein-GAN
+<p align="center">
+  <img src="./md/ESA_OPS-SAT-1_Mission-Patch.png" height="200" alt="ESA OPS-SAT-1 Mission Patch">
+</p>
 
-[中文](md/zh.md)
-This is my undergraduate design  for my Degree of Bachelor ___Research on Image Denoising Method Based on Generative Adversarial Network___
+# Generative AI Onboard the OPS-SAT-1 Spacecraft!
+Using Generative AI to reconstruct corrupted images of Earth onboard the European Space Agency's [OPS-SAT-1](https://opssat1.esoc.esa.int/) spacecraft:
+- **On September 29, 2023, the OPS-SAT-1 mission achieved a significant milestone when it successfully captured, noised, and subsequently denoised two images using WGANs, marking the pioneering first application of Generative AI in space.**
+- This repository serves as the WGANs source code Git submodule to the experiments's parent repo: [georgeslabreche/opssat-onboard-image-denoiser](https://github.com/georgeslabreche/opssat-onboard-image-denoiser).
+- Refer to the [parent repo](https://github.com/georgeslabreche/opssat-onboard-image-denoiser) for results and experiment artifacts downlinked from the spacecraft.
 
-This design is based on this [article](https://uofi.box.com/shared/static/s16nc93x8j6ctd0ercx9juf5mqmqx4bp.pdf) | [github](https://github.com/manumathewthomas/ImageDenoisingGAN)
 
-And was inspired by this [github](https://github.com/iteapoy/GANDenoising)
+## Results
+The restored images have remarkably high structural similarity indices of 0.89 and 0.92---where 1 would indicate that they are identical to their original images.
 
-tensorflow2.0 GAN code was inspired [github](https://github.com/huzixuan1/TF_2.0/tree/master/GAN)
+<div style="text-align:center;">
+  <table align="center">
+    <tr>
+      <td><img src="./md/1695963889066.jpeg" alt="Original Image 1" width="224"/></td>
+      <td><img src="./md/1695963889066.noised.jpeg" alt="Noised Image 1" width="224"/></td>
+      <td><img src="./md/1695963889066.denoised.jpeg" alt="Denoised Image 1" width="224"/></td>
+    </tr>
+    <tr>
+      <td>(a) Original.</td>
+      <td>(b) Noised.</td>
+      <td>(c) Denoised.</td>
+    </tr>
+    <tr>
+      <td><img src="./md/1695964476824.jpeg" alt="Original Image 2" width="224"/></td>
+      <td><img src="./md/1695964476824.noised.jpeg" alt="Noised Image 2" width="224"/></td>
+      <td><img src="./md/1695964476824.denoised.jpeg" alt="Denoised Image 2" width="224"/></td>
+    </tr>
+    <tr>
+      <td>(d) Original.</td>
+      <td>(e) Noised.</td>
+      <td>(f) Denoised.</td>
+    </tr>
+  </table>
+</div>
 
-other denoising way [github](https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art)
+**Figure 1: Fixed-Pattern Noise (FPN) factor 50 noising and WGANs Generative AI denoising onboard the spacecraft. Images are post-processed with color equalize.**
 
-## __Generate Network:__
 
-![generate network](https://github.com/juju-w/Image-Denoise-using-Wasserstein-GAN/blob/main/md/generate%20network.jpg)
+## Citation
+We appreciate citations to our upcoming peer-reviewed IEEE publication. Thank you!
 
-The generation network is divided into three parts:
-
-- conv layer : extracting image/noise features
-- residual block: using ___short cut___ to accelerate model training, to solve vanishing gradient problem
-- deconv layer: Up-sampling get the learning noise
-
-<img src="md/image flow.jpg" alt="image flow" style="zoom:50%;" />
-
-<center> image flow in generate network </center>
-
-## __Discriminate network:__
-
-![discriminate network](https://github.com/juju-w/Image-Denoise-using-Wasserstein-GAN/blob/main/md/discriminate%20network.jpg)
-
-According to the main idea of WGAN, change the last ___sigmoid layer___ to ___dense layer___  convert into solving __Regression Issues__
-
-## __Improvements:__
-
-- Add ___Self-attention-like___ multiply pathway in generate network
-- Improved ___LOSS function___ of the generative network
-- ___Increased stability___ of model training with Wasserstein-GAN
-
-## Results:
-
-![baboon](https://github.com/juju-w/Image-Denoise-using-Wasserstein-GAN/blob/main/md/baboon.jpg)
-
-![snow house](https://github.com/juju-w/Image-Denoise-using-Wasserstein-GAN/blob/main/md/snow%20house.jpg)
-
-![image vs noise 25 ](https://github.com/juju-w/Image-Denoise-using-Wasserstein-GAN/blob/main/md/image%20vs%20noise%2025%20.jpg)
-
-<center>noise level 25 differ denoise way vs each others </center>
-
-<img src="md/noise level 15 .png" alt="noise level 15 " style="zoom:79%;" />
-
-<center>noise level 15</center>
-
-<img src="md/noise level 25 .png" alt="noise level 25 " style="zoom:75%;" />
-
-<center>noise level 25</center>
-
-<img src="md/noise level 50 .png" alt="noise level 50 " style="zoom:74%;" />
-
-<center>noise level 50</center>
-
-## __Quick Start:__
-
-#### Requirements:
-
-- python == 3.8.10
-- tensorflow == 2.3.0
-- opencv  == 4.0.1
-- scikit-image == 0.18.1
-- numpy == 1.20.2
-- pandas == 1.2.5
-
-(optional but recommend)
-
-- cuda == 10.1
-- cudnn == 7.6.5
-- wget == 3.2 
-
-```shell
-# use conda to solve python environment
-conda create -n wgan python=3.8
-conda activate wgan
-conda install cudatoolkit=10.1 cudnn=7.6.5 tensorflow==2.3.0 numpy opencv scikit-image
-```
-
-#### Download code from github
-
-```shell
-git https://github.com/juju-w/Image-Denoise-using-Wasserstein-GAN.git
-cd Image-Denoise-using-Wasserstein-GAN
-```
-
-#### Build your own dataset
-
-```shell
-# to get help
-python image_operation.py -h
-
-# first generate your own dataset with image_operation.py automatically
-python image_operation.py \
-		--dataset_build \
-		--input_dir <INPUT_FOLDER> \
-		--out_dir <OUT_FOLDER> 
-
-# or build by yourself manually
-python image_operation.py \
-		--add_noise --noise_levels 15 \
-		--resize --size 256 \
-		--input_dir INPUT_FOLDER \
-		--out_dir <OUT_FOLDER>
-```
-
-####  Edit config file  `config.py`
-
-```python
-"""
-TRAIN CONFIG
-"""
-D_LEARNING_RATE = 0.0001	# Discriminater learning rate
-G_LEARNING_RATE = 0.0001	# Generater learning rate
-BATCH_SIZE = 64		# batch size
-PATCH_NUM = 128		# patch per image
-PATCH_SHAPE = [BATCH_SIZE, 64, 64, 3]		# pathc size
-BATCH_SHAPE = [BATCH_SIZE, 256, 256, 3]		# bathc size
-N_EPOCHS = 20		# epoch num
-SAVE_DIS_WEIGHT = False     # IF SAVE DISCIMINATER WEIGHT
-# LOSS weight factor
-ADVERSARIAL_LOSS_FACTOR = 1.0
-PIXEL_LOSS_FACTOR = 0.001
-STYLE_LOSS_FACTOR = 0
-SP_LOSS_FACTOR = 0.5
-SMOOTH_LOSS_FACTOR = 0
-SSIM_FACTOR = - 20.0
-PSNR_FACTOR = - 2.0
-D_LOSS_FACTOR = 1.0
-# PATH
-TRAIN_CLEAN_PATH = 'data/output/1_train/clean/'
-TRAIN_NOISE_PATH = 'data/output/1_train/noise15/'
-VAL_CLEAN_PATH = 'data/output/2_val/clean/'
-VAL_NOISE_PATH = 'data/output/2_val/noise15/'
-TEST_CLEAN_PATH = 'data/output/3_test/clean/'
-TEST_NOISE_PATH = 'data/output/3_test/noise15/'
-CHECKPOINT_PATH = 'checkpoint/noise15/'
-"""
-TEST CONFIG
-"""
-GEN_IMG_PATH = 'output/WGAN/fake_noise15'	#faking img save path
-GEN_CSV = True		# genrate index csv file after test 
-
-```
-
-#### RUN
-
-```shell
-# train 
-python train.py
-
-# test 
-python test.py
-```
-
-#### MESURE
-
-find csv file in `GEN_IMG_PATH.csv` default in `output/WGAN/fake_noise15.csv`
-
-## Citing 
-
-If you use  this WGAN image denoise way in your research, please consider use the following BibTeX entry.
-
-```
-@misc{juju-w2021WGAN,
-  author = {juju-w},
-  title = {Image-Denoise-using-Wasserstein-GAN},
-  year = {2021},
-  howpublished = {\url{https://github.com/juju-w/Image-Denoise-using-Wasserstein-GAN}}
+### BibTex
+```BibTex
+@inproceedings{ieee_aeroconf_labreche2024,
+  title     = {{Generative AI... in Space! Adversarial Networks to Denoise Images Onboard the OPS-SAT-1 Spacecraft}},
+  author    = {Labrèche, Georges and Guzman, Cesar and Bammens, Sam},
+  booktitle = {{2024 IEEE Aerospace Conference}},
+  year      = {2024}
 }
 ```
+
+### APA
+Labrèche, G., Guzman, C., & Bammens, S. (2024). Generative AI... in Space! Adversarial Networks to Denoise Images Onboard the OPS-SAT-1 Spacecraft. *2024 IEEE Aerospace Conference*.
+
+## Acknowledgements
+The authors would like to thank the OPS-SAT-1 Mission Control Team at ESA's European Space Operations Centre (ESOC) for their continued support in validating the experiment, especially Vladimir Zelenevskiy, Rodrigo Laurinovics, [Marcin Jasiukowicz](https://yasiu.pl/), and Adrian Calleja. Their persistence in scheduling and running the experiment onboard the spacecraft until sufficient data was acquired and downlinked was crucial to the success of this experiment. A special thank you to [Kevin Cheng](https://kevkcheng.info/) from [Subspace Signal](https://subspacesignal.com/) for granting and facilitating remote access to the GPU computing infrastructure used to train the models presented in this work.
+
+## Space Cadets
+About the experimenters!
+
+### Georges Labrèche
+[Georges](https://georges.fyi) enjoys running marathons and running experiments on the OPS-SAT-1 Space Lab. Through his work, he has established himself as a leading figure in applied artificial intelligence for in-orbit machine learning in onboard spacecraft autonomy. He lives in Queens, NY, and supports the OPS-SAT-1 mission through his Estonian-based consultancy [Tanagra Space](https://tanagraspace.com/). Georges received his B.S. in Software Engineering from the University of Ottawa, Canada, M.A. in International Affairs from the New School University in New York, NY, and M.S. in Spacecraft Design from Luleå University of Technology in Kiruna, Sweden.
+
+### César Guzman
+César is an interdisciplinary R&D engineer with a background in reactive planning, plan execution and monitoring, space systems engineering, and machine learning. Cesar holds a Ph.D. in AI. He enjoys developing machine learning experiments on the OPS-SAT-1 Space Lab. In 2012, He collaborated with NASA Ames Research Center and is an R&D partner at the Estonian-based consultancy [Tanagra Space](https://tanagraspace.com/).
+
+### Sam Bammens
+A distinguished graduate with an M.S. degree in electronics and computer engineering technology from Hasselt University and KU Leuven in 2021, has a compelling background. He embarked on his career journey with ESA. During his initial two years, Sam served as a Young Graduate Trainee on the mission control team of OPS-SAT, showcasing his expertise. Presently, he holds the role of Spacecraft Operations Engineer within ESA's ESOC interplanetary department. He's a vital part of the flight control team dedicated to ESA's Solar Orbiter mission, solidifying his presence in the realm of space exploration.
+
+## Todo
+This repo is still a bit messy. There's some cleanup todo before it can be easily re-used:
+1. Script and instructions to fetch the training data.
+2. Instructions on how to install and run the training.
+3. Refactor training data file paths.
+
+<p align="center">
+  <img src="./md/ESA_Logo.png" height="200" alt="ESA Logo">
+</p>
 

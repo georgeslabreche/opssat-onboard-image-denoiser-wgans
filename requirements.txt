@@ -1,0 +1,8 @@
+tensorflow<2.11
+wget==3.2
+tqdm==4.64.1
+opencv-python-headless==4.8.0.76
+opencv-python==4.8.0.76
+scikit-image==0.21.0
+numpy==1.25.2
+pandas==2.0.3
